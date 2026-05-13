@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>VM Operations Workflow Portal</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&family=Oswald:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+:root {
+
+    --color-canvas-white: #ffffff;
+    --color-ink-black: #292929;
+    --color-deep-black: #000000;
+
+    --font-nh: 'Roboto', sans-serif;
+    --font-s-condensed: 'Oswald', sans-serif;
+
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    background:var(--color-canvas-white);
+    color:var(--color-ink-black);
+    font-family:var(--font-nh);
+    padding:50px;
+
+}
+
+.container{
+
+    max-width:1400px;
+    margin:auto;
+
+}
+
+.hero{
+
+    border-bottom:1px solid var(--color-ink-black);
+    padding-bottom:40px;
+    margin-bottom:40px;
+
+}
+
+.hero h1{
+
+    font-family:var(--font-s-condensed);
+    font-size:43px;
+    letter-spacing:0.1em;
+    font-weight:400;
+    margin-bottom:20px;
+
+}
+
+.hero p{
+
+    font-size:16px;
+    line-height:1.5;
+    max-width:900px;
+
+}
+
+.grid{
+
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+
+}
+
+.section{
+
+    border:1px solid var(--color-ink-black);
+    padding:20px;
+    min-height:100px;
+
+}
+
+.section-title{
+
+    font-family:var(--font-s-condensed);
+    font-size:18px;
+    letter-spacing:0.1em;
+    margin-bottom:20px;
+    text-transform:uppercase;
+
+}
+
+.input-group{
+
+    margin-bottom:20px;
+
+}
+
+label{
+
+    display:block;
+    margin-bottom:8px;
+    font-family:var(--font-s-condensed);
+    letter-spacing:0.1em;
+    font-size:12px;
+    text-transform:uppercase;
+
+}
+
+select,
+input{
+
+    width:100%;
+    border:none;
+    border-bottom:1px solid var(--color-deep-black);
+    background:transparent;
+    padding:12px 0;
+    font-size:16px;
+    outline:none;
+    color:var(--color-deep-black);
+
+}
+
+button{
+
+    background:transparent;
+    border:1px solid var(--color-ink-black);
+    color:var(--color-ink-black);
+    padding:12px 20px;
+    cursor:pointer;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    font-family:var(--font-s-condensed);
+    transition:0.3s;
+
+}
+
+button:hover{
+
+    background:var(--color-ink-black);
+    color:var(--color-canvas-white);
+
+}
+
+.info-grid{
+
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+
+}
+
+.info-box{
+
+    border:1px solid var(--color-ink-black);
+    padding:20px;
+    min-height:120px;
+
+}
+
+.info-box h3{
+
+    font-family:var(--font-s-condensed);
+    font-size:14px;
+    letter-spacing:0.1em;
+    margin-bottom:15px;
+    text-transform:uppercase;
+
+}
+
+.info-box p{
+
+    font-size:16px;
+    line-height:1.5;
+
+}
+
+.workflow-step{
+
+    padding:12px 0;
+    border-bottom:1px solid #dcdcdc;
+    line-height:1.5;
+
+}
+
+.code-box{
+
+    border-top:1px solid var(--color-ink-black);
+    margin-top:20px;
+    padding-top:20px;
+
+}
+
+.code{
+
+    font-family:var(--font-s-condensed);
+    letter-spacing:0.1em;
+    font-size:18px;
+
+}
+
+.footer{
+
+    margin-top:60px;
+    border-top:1px solid var(--color-ink-black);
+    padding-top:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:10px;
+
+}
+
+.footer-left{
+
+    font-size:12px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+
+}
+
+.footer-right{
+
+    font-family:var(--font-s-condensed);
+    font-size:14px;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    border:1px solid var(--color-ink-black);
+    padding:8px 16px;
+
+}
+
+@media(max-width:900px){
+
+    .grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .info-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    body{
+
+        padding:20px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <section class="hero">
+
+        <h1>VM OPERATIONS WORKFLOW PORTAL</h1>
+
+        <p>
+
+            Centralized execution and governance framework for GLPC VMware and PCE-VME infrastructure operations.
+            Standardize operational workflows, approval visibility, shutdown validation, CAB governance,
+            execution references, and engineering traceability through a unified interface.
+
+        </p>
+
+    </section>
+
+    <div class="grid">
+
+        <section class="section">
+
+            <h2 class="section-title">Execution Input</h2>
+
+            <div class="input-group">
+
+                <label>Select Infrastructure</label>
+
+                <select id="infra" onchange="updateOperations()">
+
+                    <option value="0">GLPC VMware</option>
+                    <option value="1">PCE-VME</option>
+
+                </select>
+
+            </div>
+
+            <div class="input-group">
+
+                <label>Select Operation</label>
+
+                <select id="operation"></select>
+
+            </div>
+
+            <div class="input-group">
+
+                <label>Engineer Initials</label>
+
+                <input type="text" id="engineer" placeholder="SK">
+
+            </div>
+
+            <button onclick="generateWorkflow()">
+
+                Generate Workflow
+
+            </button>
+
+        </section>
+
+        <section class="section">
+
+            <h2 class="section-title">Governance & Validation</h2>
+
+            <div class="info-grid">
+
+                <div class="info-box">
+
+                    <h3>Change Governance</h3>
+
+                    <p id="changeType"></p>
+
+                </div>
+
+                <div class="info-box">
+
+                    <h3>Lead Time</h3>
+
+                    <p id="leadTime"></p>
+
+                </div>
+
+                <div class="info-box">
+
+                    <h3>Shutdown Requirement</h3>
+
+                    <p id="shutdown"></p>
+
+                </div>
+
+                <div class="info-box">
+
+                    <h3>Snapshot Requirement</h3>
+
+                    <p id="snapshot"></p>
+
+                </div>
+
+                <div class="info-box">
+
+                    <h3>CAB Approval</h3>
+
+                    <p id="cab"></p>
+
+                </div>
+
+                <div class="info-box">
+
+                    <h3>Reference Change</h3>
+
+                    <p id="referenceChange"></p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <section class="section" style="margin-top:40px;">
+
+        <h2 class="section-title">Execution Workflow</h2>
+
+        <div id="workflow"></div>
+
+    </section>
+
+    <section class="section" style="margin-top:40px;">
+
+        <h2 class="section-title">Execution Reference Code</h2>
+
+        <div class="code-box">
+
+            <div class="code" id="code"></div>
+
+        </div>
+
+    </section>
+
+    <div class="footer">
+
+        <div class="footer-left">
+
+            Internal Infrastructure Operations Standardization Platform
+
+        </div>
+
+        <div class="footer-right">
+
+            Crafted & Engineered by Sheetal Katke
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+//-----------------------------------
+// OPERATION DROPDOWN CONTROL
+//-----------------------------------
+
+function updateOperations(){
+
+    let infra = document.getElementById("infra").value;
+
+    let operationDropdown = document.getElementById("operation");
+
+    operationDropdown.innerHTML = "";
+
+    let commonOperations = [
+
+        { value: "MEM", text: "Memory Expansion" },
+        { value: "HEX", text: "HDD Expansion/Extension" },
+        { value: "CPU", text: "CPU Extension" },
+        { value: "HAD", text: "HDD Addition" },
+        { value: "HRM", text: "HDD Removal" },
+        { value: "NET", text: "Network Addition" },
+        { value: "RBT", text: "VM Reboot" },
+        { value: "RET", text: "VM Retire Request" }
+
+    ];
+
+    commonOperations.forEach(op => {
+
+        let option = document.createElement("option");
+
+        option.value = op.value;
+        option.text = op.text;
+
+        operationDropdown.appendChild(option);
+
+    });
+
+    //-----------------------------------
+    // GLPC ONLY
+    //-----------------------------------
+
+    if(infra == "0"){
+
+        let migrationOption = document.createElement("option");
+
+        migrationOption.value = "MIG";
+        migrationOption.text = "VM Migration From GP to HA";
+
+        operationDropdown.appendChild(migrationOption);
+
+    }
+
+}
+
+updateOperations();
+
+//-----------------------------------
+// MAIN WORKFLOW ENGINE
+//-----------------------------------
+
+function generateWorkflow(){
+
+    let infra = document.getElementById("infra").value;
+    let operation = document.getElementById("operation").value;
+    let engineer = document.getElementById("engineer").value.toUpperCase();
+
+    let infraName = infra == "0" ? "GLPC VMware" : "PCE-VME";
+
+    let changeProcess = "";
+    let leadTime = "";
+    let shutdown = "";
+    let snapshot = "Snapshot NOT Required";
+    let cab = "";
+    let referenceChange = "";
+    let stepCode = "";
+    let workflow = [];
+
+    //-----------------------------------
+    // DEFAULT GOVERNANCE
+    //-----------------------------------
+
+    if(infra == "0"){
+
+        changeProcess = "STANDARD CHANGE";
+        leadTime = "No Lead Time";
+        cab = "NOT Required";
+
+    }
+
+    else{
+
+        changeProcess = "NORMAL CHANGE";
+        leadTime = "7 Days";
+        cab = "Required";
+
+    }
+
+    //-----------------------------------
+    // GOVERNANCE OVERRIDES
+    //-----------------------------------
+
+    if(operation == "MIG"){
+
+        changeProcess = "NORMAL CHANGE";
+        leadTime = "7 Days";
+        cab = "Required";
+
+    }
+
+    if(operation == "RET"){
+
+        changeProcess = "STANDARD CHANGE";
+        leadTime = "No Lead Time";
+        cab = "NOT Required";
+
+    }
+
+    if(operation == "RBT" && infra == "1"){
+
+        changeProcess = "STANDARD CHANGE";
+        leadTime = "No Lead Time";
+        cab = "NOT Required";
+
+    }
+
+    //-----------------------------------
+    // VM MIGRATION
+    //-----------------------------------
+
+    if(operation == "MIG" && infra == "0"){
+
+        shutdown = "Shutdown REQUIRED";
+
+        workflow = [
+
+            "Access the server using the Admin credentials and AID before the activity",
+            "Verify that the server is accessible via RDP",
+            "Ensure all services are up and running",
+            "Ensure no snapshots are present",
+            "Power OFF the VM",
+            "Perform storage vMotion to the Moving LUN",
+            "Remove the VM from inventory from source vCenter",
+            "Login to destination vCenter",
+            "Navigate to Moving LUN > Files > Locate the VM",
+            "Click the VMX file and register the VM",
+            "Assign the destination cluster/node",
+            "Assign the VM network",
+            "Validate VM power state",
+            "Validate VM accessibility",
+            "Go to CMP",
+            "Convert VM to Managed if found in unmanaged state",
+            "Change the Cloud in CMP",
+            "Update the change ticket"
+
+        ];
+
+        stepCode = "VMMIG";
+
+    }
+
+    //-----------------------------------
+    // VM RETIRE REQUEST
+    //-----------------------------------
+
+    else if(operation == "RET"){
+
+        shutdown = "Shutdown REQUIRED";
+
+        workflow = [
+
+            "Validate approved retire request",
+            "Validate application/server owner approval",
+            "Trigger a FULL backup for the VM",
+            "Validate backup completion successfully",
+            "Wait for downtime activity/task closure by the concerned team",
+            "Login to CMP Portal",
+            "Click on Provisioning Tab",
+            "Click on Instances",
+            "Paste the VM name and search for the VM",
+            "Select the VM",
+            "Click on Actions on the top right-hand side",
+            "From the dropdown select Stop Server",
+            "Validate VM is powered OFF",
+            "Retain the VM in powered OFF state for 14 days",
+            "After 14 days login to CMP Portal",
+            "Click on Provisioning Tab",
+            "Click on Instances",
+            "Paste the VM name and search for the VM",
+            "Select the VM",
+            "Click on Delete on the top right-hand side",
+            "Check mark Force Delete",
+            "Click on Delete",
+            "Validate VM removal from CMP",
+            "Validate successful cleanup",
+            "Update change ticket",
+            "Update CMDB if applicable"
+
+        ];
+
+        stepCode = "VMRET";
+
+    }
+
+    //-----------------------------------
+    // MEMORY
+    //-----------------------------------
+
+    else if(operation == "MEM"){
+
+        shutdown = "HOT ADD SUPPORTED";
+
+        workflow = [
+
+            "Validate approved change ticket",
+            "Login to " + infraName,
+            "Search and validate VM",
+            "Verify cluster memory availability",
+            "Open VM settings",
+            "Increase RAM allocation",
+            "Save/Reconfigure VM",
+            "Validate successful completion",
+            "Validate OS memory visibility",
+            "Update change ticket"
+
+        ];
+
+        stepCode = "MEMHOT";
+
+    }
+
+    //-----------------------------------
+    // HDD EXPANSION
+    //-----------------------------------
+
+    else if(operation == "HEX"){
+
+        shutdown = "HOT ADD SUPPORTED";
+
+        workflow = [
+
+            "Validate approved change ticket",
+            "Login to " + infraName,
+            "Search and validate VM",
+            "Validate datastore free space",
+            "Open VM disk settings",
+            "Expand target disk",
+            "Save/Reconfigure VM",
+            "Extend filesystem inside OS",
+            "Validate updated disk size",
+            "Update change ticket"
+
+        ];
+
+        stepCode = "HDDHOT";
+
+    }
+
+    //-----------------------------------
+    // CPU
+    //-----------------------------------
+
+    else if(operation == "CPU"){
+
+        shutdown = "Shutdown REQUIRED";
+
+        workflow = [
+
+            "Validate approved change ticket",
+            "Validate downtime approval",
+            "Login to " + infraName,
+            "Search and validate VM",
+            "Gracefully shutdown VM",
+            "Validate VM powered OFF",
+            "Increase CPU allocation",
+            "Save/Reconfigure VM",
+            "Power ON VM",
+            "Validate CPU visibility inside OS",
+            "Update change ticket"
+
+        ];
+
+        stepCode = "CPUOFF";
+
+    }
+
+    //-----------------------------------
+    // HDD ADDITION
+    //-----------------------------------
+
+    else if(operation == "HAD"){
+
+        shutdown = "Shutdown REQUIRED";
+
+        workflow = [
+
+            "Validate approved change ticket",
+            "Validate downtime approval",
+            "Login to " + infraName,
+            "Search and validate VM",
+            "Gracefully shutdown VM",
+            "Validate VM powered OFF",
+            "Add new virtual disk",
+            "Configure disk size/controller",
+            "Save/Reconfigure VM",
+            "Power ON VM",
+            "Validate disk visibility",
+            "Initialize/partition disk",
+            "Update change ticket"
+
+        ];
+
+        stepCode = "HDDADD";
+
+    }
+
+    //-----------------------------------
+    // HDD REMOVAL
+    //-----------------------------------
+
+    else if(operation == "HRM"){
+
+        shutdown = "Shutdown REQUIRED";
+
+        workflow = [
+
+            "Validate approved change ticket",
+            "Validate application dependency",
+            "Login to " + infraName,
+            "Search and validate VM",
+            "Gracefully shutdown VM",
+            "Validate VM powered OFF",
+            "Remove target disk",
+            "Save/Reconfigure VM",
+            "Power ON VM",
+            "Validate OS health",
+            "Validate application functionality",
+            "Update change ticket"
+
+        ];
+
+        stepCode = "HDDREM";
+
+    }
+
+    //-----------------------------------
+    // NETWORK
+    //-----------------------------------
+
+    else if(operation == "NET"){
+
+        shutdown = "Shutdown REQUIRED";
+
+        workflow = [
+
+            "Validate approved change ticket",
+            "Validate VLAN/network availability",
+            "Login to " + infraName,
+            "Search and validate VM",
+            "Gracefully shutdown VM",
+            "Validate VM powered OFF",
+            "Add new network adapter",
+            "Assign port group/network",
+            "Save/Reconfigure VM",
+            "Power ON VM",
+            "Validate NIC visibility",
+            "Validate connectivity",
+            "Update change ticket"
+
+        ];
+
+        stepCode = "NETADD";
+
+    }
+
+    //-----------------------------------
+    // REBOOT
+    //-----------------------------------
+
+    else if(operation == "RBT"){
+
+        shutdown = "Reboot Activity";
+
+        workflow = [
+
+            "Validate approved change ticket",
+            "Validate reboot approval",
+            "Login to " + infraName,
+            "Search and validate VM",
+            "Initiate graceful reboot",
+            "Monitor reboot completion",
+            "Validate VM powered ON",
+            "Validate OS health",
+            "Validate services/applications",
+            "Update change ticket"
+
+        ];
+
+        stepCode = "REBOOT";
+
+    }
+
+    //-----------------------------------
+    // REFERENCE CHANGES
+    //-----------------------------------
+
+    if(infra == "0"){
+
+        if(operation == "HEX"){
+            referenceChange = "CHG0097882";
+        }
+
+        else if(operation == "MEM"){
+            referenceChange = "CHG0097876";
+        }
+
+        else if(operation == "CPU"){
+            referenceChange = "CHG0096778";
+        }
+
+        else if(operation == "RBT"){
+            referenceChange = "CHG0096767";
+        }
+
+        else if(operation == "HAD"){
+            referenceChange = "CHG0097873";
+        }
+
+        else if(operation == "MIG"){
+            referenceChange = "CHG0096437";
+        }
+
+        else if(operation == "RET"){
+            referenceChange = "CHG0097851";
+        }
+
+        else{
+            referenceChange = "No Reference Change Available";
+        }
+
+    }
+
+    else{
+
+        if(operation == "MEM"){
+            referenceChange = "CHG0097487";
+        }
+
+        else if(operation == "CPU"){
+            referenceChange = "CHG0096778";
+        }
+
+        else if(operation == "HAD"){
+            referenceChange = "CHG0096876";
+        }
+
+        else if(operation == "HEX"){
+            referenceChange = "ADD REFERENCE CHANGE NUMBER";
+        }
+
+        else if(operation == "HRM"){
+            referenceChange = "ADD REFERENCE CHANGE NUMBER";
+        }
+
+        else if(operation == "NET"){
+            referenceChange = "ADD REFERENCE CHANGE NUMBER";
+        }
+
+        else if(operation == "RBT"){
+            referenceChange = "CHG0097711 (KB0011920 v7.0)";
+        }
+
+        else if(operation == "RET"){
+            referenceChange = "CHG0097991(KB0011920 v7.0)";
+        }
+
+        else{
+            referenceChange = "No Reference Change Available";
+        }
+
+    }
+
+    //-----------------------------------
+    // DATE
+    //-----------------------------------
+
+    let today = new Date();
+
+    let dateCode =
+        today.getFullYear().toString() +
+        String(today.getMonth()+1).padStart(2,'0') +
+        String(today.getDate()).padStart(2,'0');
+
+    //-----------------------------------
+    // EXECUTION CODE
+    //-----------------------------------
+
+    let finalCode =
+        infra + "-" +
+        operation + "-" +
+        dateCode + "-" +
+        stepCode + "-" +
+        engineer;
+
+    //-----------------------------------
+    // DISPLAY PANELS
+    //-----------------------------------
+
+    document.getElementById("changeType").innerHTML = changeProcess;
+    document.getElementById("leadTime").innerHTML = leadTime;
+    document.getElementById("shutdown").innerHTML = shutdown;
+    document.getElementById("snapshot").innerHTML = snapshot;
+    document.getElementById("cab").innerHTML = cab;
+    document.getElementById("referenceChange").innerHTML = referenceChange;
+
+    //-----------------------------------
+    // DISPLAY WORKFLOW
+    //-----------------------------------
+
+    let workflowHTML = "";
+
+    workflow.forEach((step, index) => {
+
+        workflowHTML += `
+
+            <div class="workflow-step">
+
+                <strong>${index + 1}.</strong> ${step}
+
+            </div>
+
+        `;
+
+    });
+
+    document.getElementById("workflow").innerHTML = workflowHTML;
+
+    //-----------------------------------
+    // DISPLAY CODE
+    //-----------------------------------
+
+    document.getElementById("code").innerHTML = finalCode;
+
+}
+
+</script>
+
+</body>
+
+</html>
